@@ -186,21 +186,34 @@ def wrap_in_sync(func, _loop):
     """Return a sync wrapper around an async function executing it in the
     current event loop."""
 
+    print(f"==== wrap_in_sync A")
+
     @functools.wraps(func)
     def inner(**kwargs):
+        print(f"==== wrap_in_sync inner A")
         coro = func(**kwargs)
+        print(f"==== wrap_in_sync inner B")
         if coro is not None:
+            print(f"==== wrap_in_sync inner C")
             task = asyncio.ensure_future(coro, loop=_loop)
+            print(f"==== wrap_in_sync inner D")
             try:
+                print(f"==== wrap_in_sync inner E")
                 _loop.run_until_complete(task)
+                print(f"==== wrap_in_sync inner F")
             except BaseException:
                 # run_until_complete doesn't get the result from exceptions
                 # that are not subclasses of `Exception`. Consume all
                 # exceptions to prevent asyncio's warning from logging.
+                print(f"==== wrap_in_sync inner G")
                 if task.done() and not task.cancelled():
+                    print(f"==== wrap_in_sync inner H")
                     task.exception()
+                    print(f"==== wrap_in_sync inner I")
+                print(f"==== wrap_in_sync inner J")
                 raise
 
+    print(f"==== wrap_in_sync B")
     return inner
 
 

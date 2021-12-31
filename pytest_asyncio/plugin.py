@@ -169,17 +169,25 @@ def pytest_pyfunc_call(pyfuncitem):
     Run asyncio marked test functions in an event loop instead of a normal
     function call.
     """
+    print(f"==== pytest_pyfunc_call A")
     if "asyncio" in pyfuncitem.keywords:
+        print(f"==== pytest_pyfunc_call B")
         if getattr(pyfuncitem.obj, "is_hypothesis_test", False):
+            print(f"==== pytest_pyfunc_call C")
             pyfuncitem.obj.hypothesis.inner_test = wrap_in_sync(
                 pyfuncitem.obj.hypothesis.inner_test,
                 _loop=pyfuncitem.funcargs["event_loop"],
             )
+            print(f"==== pytest_pyfunc_call D")
         else:
+            print(f"==== pytest_pyfunc_call E")
             pyfuncitem.obj = wrap_in_sync(
                 pyfuncitem.obj, _loop=pyfuncitem.funcargs["event_loop"]
             )
+            print(f"==== pytest_pyfunc_call F")
+    print(f"==== pytest_pyfunc_call G")
     yield
+    print(f"==== pytest_pyfunc_call H")
 
 
 def wrap_in_sync(func, _loop):
